@@ -71,8 +71,10 @@ export async function getStaticProps({ params, locale, ...props }) {
     const language = locale.toUpperCase();
 
     const apolloClient = getApolloClient();
-    const databaseIdQuery = await apolloClient.query({
-        query: gql`
+    let databaseId = ""
+    try {
+        const databaseIdQuery = await apolloClient.query({
+            query: gql`
         query getCatId($categorySlug: [String])
         {
             categories(where: {slug: $categorySlug}) {
@@ -81,55 +83,62 @@ export async function getStaticProps({ params, locale, ...props }) {
                 }
             }
         }`
-        ,
-        variables: {
-            categorySlug
-        }
-    });
+            ,
+            variables: {
+                categorySlug
+            }
+        });
+        databaseId = databaseIdQuery?.data?.categories?.nodes[0]?.databaseId;
+    } catch (err) {
 
-    const databaseId = databaseIdQuery?.data?.categories?.nodes[0]?.databaseId;
-
-    if (!databaseId) {
-        return {
-            notFound: true,
-        };
     }
 
-    const categoryTranslationsData = await apolloClient.query({
-        query: gql`
-        query getTranslationsForCategory($id: ID!, $language: LanguageCodeEnum!) 
-            {
-            generalSettings {
-            title
-            }
-            category(id: $id, idType: DATABASE_ID) {
-                seo {
-                    fullHead
-                    metaDesc
-                    metaKeywords
+
+    // if (!databaseId) {
+    //     return {
+    //         notFound: true,
+    //     };
+    // }
+    let categoryTranslationsData
+    try {
+        categoryTranslationsData = await apolloClient.query({
+            query: gql`
+            query getTranslationsForCategory($id: ID!, $language: LanguageCodeEnum!) 
+                {
+                generalSettings {
+                title
                 }
-                translation(language: $language) {
-                    slug
-                    posts {
-                        nodes {
-                            slug
-                            uri
-                            title
-                            excerpt
+                category(id: $id, idType: DATABASE_ID) {
+                    seo {
+                        fullHead
+                        metaDesc
+                        metaKeywords
+                    }
+                    translation(language: $language) {
+                        slug
+                        posts {
+                            nodes {
+                                slug
+                                uri
+                                title
+                                excerpt
+                            }
                         }
                     }
-                }
-                language {
-                    code
+                    language {
+                        code
+                    }
                 }
             }
-        }
-      `,
-        variables: {
-            id: databaseId,
-            language,
-        },
-    });
+        `,
+            variables: {
+                id: databaseId,
+                language,
+            },
+        });
+    } catch (err) {
+        categoryTranslationsData = ""
+    }
 
     const categoryTranslations = categoryTranslationsData?.data?.category || {};
     const posts = categoryTranslations?.translation?.posts?.nodes || [];

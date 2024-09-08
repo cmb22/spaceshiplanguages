@@ -45,7 +45,7 @@ export default function Home({ categories, page }) {
             categories.map(({ node: category }) => {
               return category.posts.nodes.length ?
                 (
-                  <div >
+                  <div key={category.slug}>
                     <Link href={`/category/${category.slug}`} className={categoryStyles.link}>
                       <h3 className={`${categoryStyles.h3} ${categoryStyles.link}`}>{category.description}</h3>
                     </Link>

@@ -13,7 +13,7 @@ export default function Post({ post, site, language, ...props }) {
     <div className={styles.container}>
       {fullHead && <Head>{fullHead}</Head>}
       <main className={styles.main}>
-        <h1 className={styles.title} style={{ "margin-top": "var(--wp--preset--spacing--10)" }}>{post.translation.title}</h1>
+        <h1 className={styles.title} style={{ "marginTop": "var(--wp--preset--spacing--10)" }}>{post.translation.title}</h1>
 
         <div className={styles.grid}>
           <div
