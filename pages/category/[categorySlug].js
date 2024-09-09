@@ -72,8 +72,9 @@ export async function getStaticProps({ params, locale, ...props }) {
 
     const apolloClient = getApolloClient();
     let databaseId = ""
+    let databaseIdQuery
     try {
-        const databaseIdQuery = await apolloClient.query({
+        databaseIdQuery = await apolloClient.query({
             query: gql`
         query getCatId($categorySlug: [String])
         {
@@ -93,7 +94,7 @@ export async function getStaticProps({ params, locale, ...props }) {
 
     }
 
-
+    console.log("databaseIdQuery?.data", databaseIdQuery?.data)
     // if (!databaseId) {
     //     return {
     //         notFound: true,
