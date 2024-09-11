@@ -1,7 +1,7 @@
 import "../styles/globals.css";
 import { NextUIProvider } from '@nextui-org/react'
 import Header from "../components/Header";
-// import { GoogleAnalytics } from '@next/third-parties/google'
+import { GoogleAnalytics } from '@next/third-parties/google'
 
 function MyApp({ Component, pageProps }) {
   return (
@@ -9,6 +9,7 @@ function MyApp({ Component, pageProps }) {
       <NextUIProvider>
         <Header />
         <Component {...pageProps} />
+        <GoogleAnalytics gaId="TP7GQH5B" />
       </NextUIProvider>
     </>
   );
