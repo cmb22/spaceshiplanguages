@@ -9,7 +9,7 @@ function MyApp({ Component, pageProps }) {
       <NextUIProvider>
         <Header />
         <Component {...pageProps} />
-        <GoogleAnalytics gaId="TP7GQH5B" />
+        <GoogleAnalytics gaId="GTM-TP7GQH5B" />
       </NextUIProvider>
     </>
   );
